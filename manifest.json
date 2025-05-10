@@ -1,0 +1,34 @@
+{
+  "short_name": "Wii Shop",
+  "name": "Wii Shop Channel",
+  "description": "Recreation of the Wii Shop Channel",
+  "icons": [
+    {
+      "src": "pwa/icon192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "pwa/icon512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "Scope": "/",
+  "background_color": "#FFFFFF",
+  "display": "fullscreen",
+  "display_override": [
+    "fullscreen",
+    "standalone",
+    "minimal-ui",
+    "window-controls-overlay",
+    "browser"
+  ],
+  "scope": "/",
+  "theme_color": "#34BEED",
+  "splash_pages": null
+}

@@ -1,0 +1,472 @@
+<!--Remade by Nathan Boehm-->
+<!--nathanboehm.com-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wii Shop Channel</title>
+    <meta name="title" content="Wii Shop Channel" />
+    <meta name="description" content="A faithful remake of the Wii Shop Channel" />
+    <meta content="Wii Shop Channel" property="og:title" />
+    <meta content="A faithful remake of the Wii Shop Channel" property="og:description" />
+    <meta content="http://wiishopchannel.net/" property="og:url" />
+    <meta content="http://wiishopchannel.net/pwa/icon192.png" property="og:image" />
+    <meta content="#34BEED" data-react-helmet="true" name="theme-color" />
+    <!--<link rel="shortcut icon" href="/oss/favicon.ico" />-->
+    <link rel="icon" href="/icon.gif" type="image/gif" />
+    <link rel="manifest" href="/manifest.json">
+    <style type="text/css">
+      .dot {
+      	font-family: "Wii NTLG PGothic JPN Regular";
+      	font-size: 16px;
+      	color: #8C8C8C;
+      }
+      #line01 {
+      	position:absolute;
+      	top:59px;
+      	height:10px;
+      	z-index:-5;
+      }
+      #line02 {
+      	position:absolute;
+      	top:363px;
+      	height:10px;
+      	/* //z-index:21; */
+      	z-index:-5;
+      }
+      input::placeholder {
+        font-size: 23.333333px;
+        top: 31px;
+      }
+      .load {
+        animation: rotation 1s infinite linear;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .key {
+        position: fixed;
+        font-family: "Wii NTLG PGothic JPN Regular";
+        width: 43.5px;
+        height: 35.5px;
+        transition: transform 0.05s;
+        z-index: 0;
+      }
+      .keycolor {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #FFFFFF;
+        border-radius: 6px;
+        transition: background-color 0.05s;
+      }
+      .keyimg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0.5;
+      }
+      .keytext {
+        position: absolute;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        top: 1px;
+        align-items: center;
+        justify-content: center;
+      	font-size: 20px;
+      }
+      @keyframes rotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(359deg);
+        }
+      }
+      @font-face {
+        font-family: 'Wii NTLG PGothic JPN Regular';
+        src: url(/oss/serv/font2.ttf);
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      if (typeof navigator.serviceWorker !== 'undefined') {
+        navigator.serviceWorker.register('pwa/sw.js')
+      }
+    </script>
+    <!--<div id="cursorfield" style="position: fixed; top: 0px; left: 0px; overflow: hidden; width: 100vw; height: 100vh; z-index: 1000;" onmouseover="cursormove(event)">-->
+    <!--<div id="cursorhider" style="position: fixed; top: 0px; left: 0px; overflow: hidden; width: 100vw; height: 100vh; z-index: 4999; opacity: 0; pointer-events: none; cursor: none;"></div>-->
+    <div id="verybackbg" style="position: fixed; overflow: hidden; top: 0px; left: 0px; width: 100vw; height: 100vh; z-index: -9999; background-color: #ffffff;"></div>
+    <canvas id="mariocanvas" style="position: fixed; top: 0px; left: 0px; z-index: -5; image-rendering: pixelated;" width="608" height="456"></canvas>
+    <div id="cursorfield" style="position: fixed; top: 0px; left: 0px; overflow: hidden; width: 100vw; height: 100vh; z-index: -999;"></div>
+    <img id="cursor" style="position: fixed; overflow: hidden; z-index: 1001; pointer-events: none; transform-origin: 17px 2px; display: none;" src="cursor.png"/>
+    <div id="fadescreen" style="position: fixed; top: 0px; left: 0px; overflow: hidden; width: 100vw; height: 100vh; z-index: -1002; opacity: 0; background: #000000;"></div>
+    
+    <div id="keyboard" style="position: fixed; margin: 0; width: 608px; height: 456px; z-index: -1000; opacity: -0.5; top: 100vh; transition: top 0.5s ease-in-out 0s, opacity 0.5s ease-in-out 0s, z-index 0s ease 0s;">
+    
+      <input id="keyprompt" autocomplete="off" type=text style='position: fixed; font-family: "Wii NTLG PGothic JPN Regular"; font-size: 30.7px; left: 20px; top: 16px; width: 539px; height: 43px; border: 7px double #6DD3E3; border-radius: 13px; outline: none; color: #2963be; padding-bottom: 42px; padding-left: 6px;'/>
+      
+      <!--<img style="width: 608px; height: 456px; z-index: -10;" src="reference 4x3.png"/>-->
+      
+      <div id="Escape" class="key" style="left: 21px; top: 388px; width: 172px; height: 54px;" onmouseenter="javascript:hoverconfirm(this);" onmouseleave="javascript:unhoverconfirm(this);" onmousedown="javascript:exit();">
+        <img class="keyimg" src="img/keyboard confirm.png" style="opacity: 1"/>
+        <b class="keytext" style="font-size: 25px;">Quit</b>
+      </div>
+      
+      <div id="Enter" class="key" style="left: 418px; top: 388px; width: 172px; height: 54px;" onmouseenter="javascript:hoverconfirm(this);" onmouseleave="javascript:unhoverconfirm(this);" onmousedown="javascript:confirm();">
+        <img class="keyimg" src="img/keyboard confirm.png" style="opacity: 1"/>
+        <b class="keytext" style="font-size: 25px;">OK</b>
+      </div>
+      
+      <div id="Backspace" class="key" style="left: 506.5px; top: 160px; width: 72px; height: 33.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor" style="background-color: #B8ECFF;"></div>
+        <img class="keyimg" src="img/keyboard long button.png"/>
+        <img class="keytext" src="img/keyboard back.png" style="top: 0;"/>
+      </div>
+      
+      <div id="CapsLock" class="key" style="left: 26.5px; top: 232px; width: 85.5px; height: 32px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor" style="background-color: #B8ECFF;"></div>
+        <img class="keyimg" src="img/keyboard long button.png"/>
+        <b class="keytext">Caps</b>
+      </div>
+      
+      <div id="ShiftLeft" class="key" style="left: 26.5px; top: 268px; width: 95.5px; height: 32px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor" style="background-color: #B8ECFF;"></div>
+        <img class="keyimg" src="img/keyboard long button.png"/>
+        <b class="keytext">Shift</b>
+      </div>
+      
+      <div id="Space" class="key" style="left: 245.5px; top: 302.5px; width: 159px; height: 33px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor" style="background-color: #B8ECFF;"></div>
+        <img class="keyimg" src="img/keyboard longer button.png"/>
+        <b class="keytext">Space</b>
+      </div>
+      
+      <div id="Digit1" class="key" style="left: 26px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">1</b>
+      </div>
+      
+      <div id="Digit2" class="key" style="left: 69.5px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">2</b>
+      </div>
+      
+      <div id="Digit3" class="key" style="left: 113px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">3</b>
+      </div>
+      
+      <div id="Digit4" class="key" style="left: 156.5px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">4</b>
+      </div>
+      
+      <div id="Digit5" class="key" style="left: 200px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">5</b>
+      </div>
+      
+      <div id="Digit6" class="key" style="left: 243.5px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">6</b>
+      </div>
+      
+      <div id="Digit7" class="key" style="left: 287px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">7</b>
+      </div>
+      
+      <div id="Digit8" class="key" style="left: 330.5px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">8</b>
+      </div>
+      
+      <div id="Digit9" class="key" style="left: 374px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">9</b>
+      </div>
+      
+      <div id="Digit0" class="key" style="left: 417.5px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">0</b>
+      </div>
+      
+      <div id="Minus" class="key" style="left: 461px; top: 159px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">-</b>
+      </div>
+      
+      <div id="KeyQ" class="key" style="left: 47.5px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">q</b>
+      </div>
+      
+      <div id="KeyW" class="key" style="left: 91px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">w</b>
+      </div>
+      
+      <div id="KeyE" class="key" style="left: 134.5px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">e</b>
+      </div>
+      
+      <div id="KeyR" class="key" style="left: 178px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">r</b>
+      </div>
+      
+      <div id="KeyT" class="key" style="left: 221.5px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">t</b>
+      </div>
+      
+      <div id="KeyY" class="key" style="left: 265px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">y</b>
+      </div>
+      
+      <div id="KeyU" class="key" style="left: 308.5px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">u</b>
+      </div>
+      
+      <div id="KeyI" class="key" style="left: 352px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">i</b>
+      </div>
+      
+      <div id="KeyO" class="key" style="left: 395.5px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">o</b>
+      </div>
+      
+      <div id="KeyP" class="key" style="left: 439px; top: 194.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">p</b>
+      </div>
+      
+      <div id="KeyA" class="key" style="left: 114px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">a</b>
+      </div>
+      
+      <div id="KeyS" class="key" style="left: 157.5px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">s</b>
+      </div>
+      
+      <div id="KeyD" class="key" style="left: 201px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">d</b>
+      </div>
+      
+      <div id="KeyF" class="key" style="left: 244.5px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">f</b>
+      </div>
+      
+      <div id="KeyG" class="key" style="left: 288px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">g</b>
+      </div>
+      
+      <div id="KeyH" class="key" style="left: 331.5px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">h</b>
+      </div>
+      
+      <div id="KeyJ" class="key" style="left: 375px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">j</b>
+      </div>
+      
+      <div id="KeyK" class="key" style="left: 418.5px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">k</b>
+      </div>
+      
+      <div id="KeyL" class="key" style="left: 462px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">l</b>
+      </div>
+      
+      <div id="Semicolon" class="key" style="left: 505.5px; top: 230px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">:</b>
+      </div>
+      
+      <div id="KeyZ" class="key" style="left: 124px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">z</b>
+      </div>
+      
+      <div id="KeyX" class="key" style="left: 167.5px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">x</b>
+      </div>
+      
+      <div id="KeyC" class="key" style="left: 211px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">c</b>
+      </div>
+      
+      <div id="KeyV" class="key" style="left: 254.5px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">v</b>
+      </div>
+      
+      <div id="KeyB" class="key" style="left: 298px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">b</b>
+      </div>
+      
+      <div id="KeyN" class="key" style="left: 341.5px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">n</b>
+      </div>
+      
+      <div id="KeyM" class="key" style="left: 385px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">m</b>
+      </div>
+      
+      <div id="Comma" class="key" style="left: 428.5px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">,</b>
+      </div>
+      
+      <div id="Period" class="key" style="left: 472px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">.</b>
+      </div>
+      
+      <div id="Equal" class="key" style="left: 515.5px; top: 265.5px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">=</b>
+      </div>
+      
+      <div id="BracketLeft" class="key" style="left: 156.5px; top: 301px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">[</b>
+      </div>
+      
+      <div id="BracketRight" class="key" style="left: 200px; top: 301px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">]</b>
+      </div>
+      
+      <div id="Quote" class="key" style="left: 406.5px; top: 301px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">'</b>
+      </div>
+      
+      <div id="BackQuote" class="key" style="left: 450px; top: 301px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">`</b>
+      </div>
+      
+      <div id="Slash" class="key" style="left: 493.5px; top: 301px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">/</b>
+      </div>
+      
+      <div id="AtSymbol" class="key" style="left: 537px; top: 301px;" onmouseenter="javascript:hoverkey(this);" onmouseleave="javascript:unhoverkey(this);" onmousedown="javascript:downkey(this);" onmouseup="javascript:upkey(this);">
+        <div class="keycolor"></div>
+        <img class="keyimg" src="img/keyboard button.png"/>
+        <b class="keytext">@</b>
+      </div>
+      
+    </div>
+    
+    <img id="keygradient1" style="position: fixed; margin: 0; left: 0px; top: 100vh; width: 100vw; height: 456px; z-index: -997; opacity: -0.5; transition: top 0.5s ease-in-out 0s, opacity 0.5s ease-in-out 0s, z-index 0s ease 0s;" src="img/keyboard gradient 1.png"/>
+    <div id="keygbg1" style="position: fixed; margin: 0; left: 0px; top: 50vh; width: 100vw; height: 50vh; z-index: -996; opacity: -0.5; transition: opacity 0.5s ease-in-out 0s, z-index 0s ease 0s; background-color: #0C83BC"></div>
+    <img id="keygradient2" style="position: fixed; margin: 0; left: 0px; top: -100vh; width: 100vw; height: 456px; z-index: -999; opacity: -0.5; transition: top 0.5s ease-in-out 0s, opacity 0.5s ease-in-out 0s, z-index 0s ease 0s;" src="img/keyboard gradient 2.png"/>
+    <div id="keygbg2" style="position: fixed; margin: 0; left: 0px; top: 0px; width: 100vw; height: 50vh; z-index: -998; opacity: -0.5; transition: opacity 0.5s ease-in-out 0s, z-index 0s ease 0s; background-color: #687892"></div>
+    <img id="keybg" style="position: fixed; margin: 0; left: 0px; top: 0px; width: 100vw; height: 456px; z-index: -995; opacity: -0.5; transition: opacity 0.5s ease-in-out 0s, z-index 0s ease 0s;" src="img/keyboard background.png"/>
+    
+    <div class="dot" id="fps" style="position: fixed; display: none; z-index: 1003;"></div>
+    
+    <img class="gradient" id="gradient1" style="position: fixed; top: 0px; left: 0px; width: 10.3703704vh; height: 100vh; z-index: -10; overflow: hidden;" src="img/gradient.png"/>
+    <img class="gradient" id="gradient2" style="position: fixed; top: 0px; right: 0px; width: 10.3703704vh; height: 100vh; z-index: -10; transform: rotate(180deg); overflow: hidden;" src="img/gradient.png"/>
+    
+    <div id="dots" style="position: fixed; margin: 0; width: 608px; height: 456px; z-index: -1;">
+      <div class="dot" id="line01" style="left: 300px;" >････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････</div>
+      <div class="dot" id="line01" style="right: 308px;" >･･･････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････</div>
+      <div class="dot" id="line02" style="left: 300px;" >････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････</div>
+      <div class="dot" id="line02" style="right: 308px;" >･･･････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････････</div>
+    </div>
+    
+    <div id="app" style="position: fixed; margin: 0; width: 608px; height: 456px;">
+      <audio id="cSE_Forcus" preload="auto" src="snd/select.mp3"></audio>
+      <audio id="cSE_Decide" preload="auto" src="snd/decide.mp3"></audio>
+      <audio id="cSE_Cancel" preload="auto" src="snd/cancel.mp3"></audio>
+      <audio id="cSE_Finish" preload="auto" src="snd/finish.mp3"></audio>
+      <div class="dot" id="note" style="display: none; position: fixed; top: 30%; font-size: 18px; width: 100%; text-align: center; justify-content: center; z-index: 3; display: none;" onclick="this.style.display = 'none';">Click the ring to continue.</div>
+      <a href="javascript:goto('W_01.html')" id="link">
+        <img class="load" id="load1" style="top: 264px; left: 264px; width: 100px; height: 100px; z-index: 3; opacity: 0.25;" src="img/ringshadow.png"/>
+        <img class="load" id="load2" style="top: 254px; left: 254px; width: 100px; height: 100px; z-index: 4;" src="img/ring.png"/>
+      </a>
+      <iframe src="oss/serv/index.html" height="456px" width="608px" style="position: absolute; border: none; z-index: 2; overflow: hidden;" onload="finishedloading(this)" name="frame" id="frame"></iframe>
+      <iframe src="oss/serv/index.html" height="456px" width="608px" style="position: absolute; border: none; z-index: 1; overflow: hidden;" onload="finishedloading(this)" name="otherframe" id="otherframe"></iframe>
+      <script language="JavaScript" src='/oss/oss/common/js//sound.js'></script>
+      <script language="JavaScript" src='/main.js'></script>
+      <script>
+        function finishedloading(iframe) {
+          content_finished_loading(iframe);
+        }
+      </script>
+    </div>
+  </body>
+</html>
